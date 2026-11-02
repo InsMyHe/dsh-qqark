@@ -23,8 +23,11 @@ import subprocess
 import sys
 from pathlib import Path
 
-# 匹配 C:\Users\xxx 或 C:/Users/xxx，但用户名段不能只有点号（那是占位写法）
+# 匹配 Windows 用户目录，但用户名段不能只有点号（那是代码注释里的占位写法）
 WIN_HOME = re.compile(r"[A-Za-z]:[\\/]+Users[\\/]+(?!\.{2,}(?:[\\/]|$))[A-Za-z0-9][A-Za-z0-9._-]*")
+
+# 本脚本自己要写清楚在找什么，天生含示例字符串，扫描时跳过自身
+SELF = Path(__file__).resolve()
 
 # 只扫文本类文件；二进制里偶尔会撞出巧合字节
 TEXT_SUFFIXES = {
@@ -33,11 +36,30 @@ TEXT_SUFFIXES = {
 }
 
 
+SKIP_DIRS = {".git", "__pycache__", "node_modules", "_selftest", "_check", "data"}
+
+
 def tracked_files() -> list[Path]:
-    out = subprocess.run(
-        ["git", "ls-files", "-z"], capture_output=True, check=True
-    ).stdout.decode("utf-8", "replace")
-    return [Path(p) for p in out.split("\0") if p]
+    """被跟踪的文件；不在 git 仓库里（比如导出后的目录）就退回遍历文件系统。"""
+    try:
+        out = subprocess.run(
+            ["git", "ls-files", "-z"],
+            capture_output=True,
+            check=True,
+            cwd=Path(__file__).resolve().parent.parent,
+        ).stdout.decode("utf-8", "replace")
+        files = [Path(p) for p in out.split("\0") if p]
+        if files:
+            return files
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+        pass
+
+    root = Path(__file__).resolve().parent.parent
+    return [
+        p.relative_to(root)
+        for p in root.rglob("*")
+        if p.is_file() and not (set(p.relative_to(root).parts) & SKIP_DIRS)
+    ]
 
 
 def build_patterns() -> list[tuple[str, re.Pattern[str]]]:
@@ -60,6 +82,8 @@ def main() -> int:
 
     for path in tracked_files():
         if path.suffix.lower() not in TEXT_SUFFIXES or not path.exists():
+            continue
+        if path.resolve() == SELF:
             continue
         try:
             text = path.read_text(encoding="utf-8", errors="replace")
