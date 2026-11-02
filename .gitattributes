@@ -1,0 +1,13 @@
+# 仓库统一用 LF，但批处理必须是 CRLF，否则 cmd.exe 会把 if 多行块读成一行。
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# 二进制
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text eol=lf

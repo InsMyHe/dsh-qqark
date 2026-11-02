@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "title": "QQ 群文件归档器",
+    "description": "只读查询本机 QQ 群文件 / 聊天视频归档器的状态、群列表、已下载文件与下载任务。"
+  },
+  "config": {
+    "baseUrl": {
+      "description": "本机 QQ 归档器的 Web 服务地址（设置页里「本地媒体库」的那个端口）。"
+    },
+    "timeoutMs": {
+      "description": "单次 HTTP 请求超时（毫秒）。"
+    }
+  }
+}

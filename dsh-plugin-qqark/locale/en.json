@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "title": "QQ Group Archive Bridge",
+    "description": "Read-only bridge to the local QQ group-file / chat-video archiver: status, group list, archived files and download tasks."
+  },
+  "config": {
+    "baseUrl": {
+      "description": "Base URL of the local QQ archiver web service (the port of its media library)."
+    },
+    "timeoutMs": {
+      "description": "Per-request HTTP timeout in milliseconds."
+    }
+  }
+}
