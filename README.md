@@ -24,8 +24,6 @@ NapCat（QQ 协议端）  ──反向 WebSocket──▶  归档器 main.py  �
 - **本地媒体库**：`http://127.0.0.1:7801` 里搜索、筛选、直接播放（支持拖动进度条）
 - **插件只读**：暴露给 agent 的 4 个工具全是只读查询；写操作只能由用户点侧边栏 UI 触发
 
-![媒体库主界面](docs/screenshots/main-1440.png)
-
 ## 快速开始（归档器）
 
 1. **装好并启动 NapCat、登录 QQ**（保持它在运行）
@@ -84,7 +82,6 @@ python main.py --log DEBUG      输出调试日志
 
 视频卡片点开就能播放（HTTP Range 支持拖动）。非媒体文件点「目录」用系统默认程序打开。
 
-![下载队列与任务状态](docs/screenshots/tasks-1440.png)
 
 ## 能抓到什么
 
