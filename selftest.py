@@ -151,9 +151,14 @@ def main() -> int:
         check("事件已送达路由器", got["event"] is not None)
         check("群文件事件已计数", app.router.counters["group_upload"] >= 1,
               str(app.router.counters))
-        tasks = db.recent_tasks(10)
-        check("已入下载队列", any("真实群文件测试" in (t["file_name"] or "") for t in tasks),
-              f"{len(tasks)} 条任务")
+        # 不能只看 recent_tasks(10)：后台下载线程会不停重试 mock 演示文件，
+        # 每次重试都刷新 updated_at，把刚入队的这条挤出「最近 10 条」窗口，
+        # 于是这条断言在 Windows CI 上会随机失败（真机本地却常赢）。直接全表计数。
+        n_new = db.conn().execute(
+            "SELECT COUNT(*) FROM tasks WHERE file_name LIKE ?",
+            ("%真实群文件测试%",),
+        ).fetchone()[0]
+        check("已入下载队列", n_new >= 1, f"{n_new} 条匹配")
 
         # 聊天视频事件
         ev2 = {
@@ -166,11 +171,15 @@ def main() -> int:
         _ws_send(sock, json.dumps(ev2, ensure_ascii=False))
         time.sleep(0.6)
         check("聊天视频已计数", app.router.counters["chat_video"] >= 1, str(app.router.counters))
-        vtask = [t for t in db.recent_tasks(20) if t["source"] == "聊天视频"]
-        check("视频任务入队", len(vtask) >= 1)
-        if vtask:
-            check("视频名自动补 .mp4", vtask[0]["file_name"].endswith(".mp4"),
-                  vtask[0]["file_name"])
+        # 同上：按文件名直查，不依赖 recent_tasks 的排序窗口。
+        vrow = db.conn().execute(
+            "SELECT file_name FROM tasks WHERE source='聊天视频' AND file_name LIKE ?",
+            ("abc123%",),
+        ).fetchone()
+        check("视频任务入队", vrow is not None)
+        if vrow:
+            check("视频名自动补 .mp4", vrow["file_name"].endswith(".mp4"),
+                  vrow["file_name"])
 
         # 关闭连接
         try:

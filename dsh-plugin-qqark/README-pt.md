@@ -37,8 +37,6 @@ As quatro degradam com elegância: se o arquivador não estiver rodando, devolve
 
 Um painel no cliente web do DSH com cabeçalho de estado, lista de grupos com interruptores por grupo, navegador de arquivos, fila de downloads, visualizador de log e um cartão de «modo arquivador» que pode iniciar o processo e alternar o NapCat entre a conta de arquivo e a conta do dia a dia.
 
-![Painel lateral](../docs/screenshots/real-7801.png)
-
 ### Correções que vale conhecer
 
 - **`file_count` precisa ser passado explicitamente.** `get_group_root_files` / `get_group_files_by_folder` do NapCat devolvem 50 itens por padrão, e o laço interno de paginação para assim que `r.length === n.fileCount`. Um grupo grande é truncado em silêncio, e o truncamento cascateava em vereditos `gone` irreversíveis. Correção: enviar sempre `LIST_FILE_COUNT = 1000`.

@@ -101,7 +101,7 @@ def main() -> int:
     tmp = Path(tempfile.mkdtemp(prefix="qqark_gone_"))
     failures: list[str] = []
     try:
-        vanished = _run(VanishedOneBot(), tmp / "a", "选修课选课攻略.xlsx")
+        vanished = _run(VanishedOneBot(), tmp / "a", "某课程资料.xlsx")
         print(f"vanished: state={vanished['state']} "
               f"pending={vanished['pending']} find_calls={vanished['find_calls']}")
         print(f"  last_error={vanished['last_error']}")
@@ -110,7 +110,7 @@ def main() -> int:
         if vanished["pending"] != 0:
             failures.append(f"gone 的任务被放回了队列（pending={vanished['pending']}）")
 
-        half = _run(HalfReadOneBot(), tmp / "b", "内务评选参考办法-改 (1).pdf")
+        half = _run(HalfReadOneBot(), tmp / "b", "某通知扫描件.pdf")
         print(f"half-read: state={half['state']} pending={half['pending']}")
         print(f"  last_error={half['last_error']}")
         if half["state"] != "failed":

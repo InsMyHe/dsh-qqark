@@ -37,8 +37,6 @@ DeepSeek Harness（DSH）插件：把本机的 [QQ 群文件 / 聊天视频归�
 
 DSH Web 客户端里的一个面板：状态头、带开关的群列表、文件浏览、下载队列、日志查看，以及「归档模式」卡片——能直接拉起归档器进程，并在归档专用号与日常号之间切换 NapCat 的登录。
 
-![侧边栏面板](../docs/screenshots/real-7801.png)
-
 ### 几个值得知道的坑（都已修）
 
 - **列群文件必须显式传 `file_count`。** NapCat 的 `get_group_root_files` / `get_group_files_by_folder` 默认只回 50 条，内部翻页的退出条件是 `r.length === n.fileCount`。大群因此被静默截断，而截断又会级联成不可逆的 `gone` 误判。修法是固定传 `LIST_FILE_COUNT = 1000`。

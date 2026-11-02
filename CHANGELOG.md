@@ -9,6 +9,8 @@
 - **新增 `market/`：DSH 插件市场索引（format 1）。** 把插件挂进 Harness 的「发现」页，不必手动 `pnpm pack` + `dsh plugin add`。索引里的安装源是钉死在 commit 上的 git spec（`git+https://github.com/InsMyHe/dsh-qqark.git#<commit>&path:/dsh-plugin-qqark`）。
 - **插件 `package.json` 补 `engines.dsh`**：`>=0.2.1-0 <0.3.0`，与市场索引里的 `engines.dsh` 保持一致。
 - **新增 `scripts/check-market-index.mjs`**：逐条对齐官方 `@deepseek-ai/dsh-plugin-market-index` 的 format 1 规则（commit 必须 40 位小写十六进制、图标解析、category/label 必须已声明），CI 里同步执行。
+- **修复 `selftest.py` 的两条偶发失败断言。**「已入下载队列」与「视频任务入队」原本走 `db.recent_tasks(10/20)` 的排序窗口，而 mock 演示文件的后台重试会不断刷新 `updated_at`，把刚入队那条挤出窗口，导致 Windows CI 上随机红。改为按文件名直查全表计数，与调度时序无关。
+- **清理仓库内的个人信息。** 删掉 `docs/screenshots/` 三张真机界面截图（像素里含真实群名与文件名，且文件名把本地端口写进了名字），五份插件 README 的图片引用一并去掉；`tests/test_gone_state.py` 里两处调试时粘进去的真实文件名换成中性占位。`scripts/check_no_personal_paths.py` 新增一类检查：从本机 `data/qqark.db` 动态取群名/群号/文件名当词表扫描仓库，词表只在运行时存在、不落库，库不存在时自动跳过——这样以后写测试顺手粘真实数据会被 CI 直接拦下。
 
 ## 0.5.2
 

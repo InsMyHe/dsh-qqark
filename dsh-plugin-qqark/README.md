@@ -37,8 +37,6 @@ All four degrade gracefully: if the archiver is not running, they return a hint 
 
 A panel in the DSH web client with a status header, group list with per-group switches, file browser, download queue, log viewer, and an "archiver mode" card that can start the archiver process and flip NapCat between the archive account and the daily-driver account.
 
-![Sidebar panel](../docs/screenshots/real-7801.png)
-
 ### Notable fixes worth knowing about
 
 - **`file_count` must be passed explicitly.** NapCat's `get_group_root_files` / `get_group_files_by_folder` default to 50 items; the internal pagination loop breaks as soon as `r.length === n.fileCount`. Listing a large group therefore silently truncates, and the truncation used to cascade into irreversible `gone` verdicts. Fix: always send `LIST_FILE_COUNT = 1000`.

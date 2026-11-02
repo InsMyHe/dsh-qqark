@@ -170,7 +170,6 @@ tests/               回归测试（5 个）
 scripts/             仓库自检脚本（CI 也跑同一套）
 dsh-plugin-qqark/    DeepSeek Harness 插件的源码与文档
 market/              DSH 插件市场索引（format 1），把插件挂进「发现」页
-docs/screenshots/    界面截图
 ```
 
 ## 测试

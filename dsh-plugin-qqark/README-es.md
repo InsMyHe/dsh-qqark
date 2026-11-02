@@ -37,8 +37,6 @@ Las cuatro degradan con elegancia: si el archivador no está en marcha devuelven
 
 Un panel en el cliente web de DSH con cabecera de estado, lista de grupos con interruptores por grupo, explorador de archivos, cola de descargas, visor de registros y una tarjeta de «modo archivador» que puede arrancar el proceso y alternar NapCat entre la cuenta de archivo y la cuenta de uso diario.
 
-![Panel lateral](../docs/screenshots/real-7801.png)
-
 ### Correcciones que conviene conocer
 
 - **`file_count` debe pasarse explícitamente.** `get_group_root_files` / `get_group_files_by_folder` de NapCat devuelven 50 elementos por defecto, y su bucle interno de paginación corta en cuanto `r.length === n.fileCount`. Un grupo grande se trunca en silencio, y ese truncamiento se propagaba a veredictos `gone` irreversibles. Solución: enviar siempre `LIST_FILE_COUNT = 1000`.
