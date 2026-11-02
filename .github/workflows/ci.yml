@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  archiver:
+    name: 归档器 / Archiver (Python ${{ matrix.python }} on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Byte-compile every module
+        run: python -m compileall -q qqark main.py selftest.py tests
+
+      - name: selftest (end-to-end, no NapCat needed)
+        env:
+          PYTHONIOENCODING: utf-8
+        run: python selftest.py
+
+      - name: Regression tests
+        env:
+          PYTHONIOENCODING: utf-8
+        shell: bash
+        run: |
+          set -e
+          for f in tests/test_*.py; do
+            echo "=== $f ==="
+            python "$f"
+          done
+
+  plugin:
+    name: 插件 / Plugin contract
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dsh-plugin-qqark
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Syntax-check the ESM sources
+        run: |
+          for f in index.js client.js napcat.js; do
+            node --check "$f"
+          done
+
+      - name: Assert package contract
+        run: node ../scripts/check-plugin-contract.mjs .
+
+      - name: Assert market index (format 1)
+        run: node ../scripts/check-market-index.mjs
+
+  hygiene:
+    name: 仓库卫生 / Repo hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: No committed runtime state
+        run: |
+          set -e
+          for p in data _selftest _check config.json node_modules; do
+            if [ -e "$p" ]; then
+              echo "✗ $p must not be committed"
+              exit 1
+            fi
+          done
+          if git ls-files | grep -E '\.(tgz|db|log)$'; then
+            echo "✗ tarballs, databases and logs must not be committed"
+            exit 1
+          fi
+          echo "✓ working tree is clean of runtime state"
+
+      - name: No leaked local identity
+        run: python scripts/check_no_personal_paths.py
+
+      - name: 启动.bat must be ASCII + CRLF
+        run: python scripts/check_launcher.py 启动.bat
