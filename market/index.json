@@ -1,0 +1,85 @@
+{
+  "$comment": "DSH 插件市场索引（format 1）。用法：DSH → 插件 → 实验性插件 → 更多 → 自定义插件市场 → 添加索引源，粘贴：https://cdn.jsdelivr.net/gh/InsMyHe/dsh-qqark@main/market/index.json",
+  "format": 1,
+  "title": {
+    "en": "QQArk",
+    "zh": "QQArk 群文件归档"
+  },
+  "description": {
+    "en": "A local read-only bridge to the QQArk archive daemon: query archived QQ group files, chat videos, and download tasks without leaving DeepSeek Harness.",
+    "zh": "本机 QQ 群文件 / 聊天视频归档器的只读桥梁：在 DeepSeek Harness 里直接查状态、群列表、已下载文件与下载任务。"
+  },
+  "metadata": {
+    "categories": {
+      "tools": {
+        "title": {
+          "en": "Tools",
+          "zh": "工具"
+        }
+      }
+    },
+    "labels": {
+      "local": {
+        "title": {
+          "en": "Runs locally",
+          "zh": "本机运行"
+        }
+      },
+      "read-only": {
+        "title": {
+          "en": "Read-only",
+          "zh": "只读"
+        }
+      }
+    }
+  },
+  "plugins": [
+    {
+      "name": "dsh-plugin-qqark",
+      "title": {
+        "en": "QQArk archiver bridge",
+        "zh": "QQArk 归档器插件"
+      },
+      "description": {
+        "en": "Four read-only agent tools plus a sidebar panel that read your local QQArk archive over HTTP. Nothing is written back: the agent can only inspect status, group lists, archived files, and download tasks.",
+        "zh": "四个只读 agent 工具加一个侧边栏面板，通过 HTTP 读取本机 QQArk 归档器。不写回任何东西：agent 只能查询状态、群列表、已归档文件与下载任务。"
+      },
+      "icon": "icon.svg",
+      "author": "InsMyHe",
+      "homepage": "https://github.com/InsMyHe/dsh-qqark/tree/main/dsh-plugin-qqark",
+      "repository": {
+        "url": "https://github.com/InsMyHe/dsh-qqark",
+        "directory": "dsh-plugin-qqark"
+      },
+      "metadata": {
+        "category": "tools",
+        "keywords": [
+          "qq",
+          "archive",
+          "napcat",
+          "onebot",
+          "file-archive"
+        ],
+        "labels": [
+          "local",
+          "read-only"
+        ]
+      },
+      "versions": [
+        {
+          "version": "0.5.2",
+          "publishTimestamp": 1793634226,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/InsMyHe/dsh-qqark",
+            "commit": "a5861680cd142d12d4748311220d6f6abb6ec2e2",
+            "path": "dsh-plugin-qqark"
+          },
+          "engines": {
+            "dsh": ">=0.2.1-0 <0.3.0"
+          }
+        }
+      ]
+    }
+  ]
+}

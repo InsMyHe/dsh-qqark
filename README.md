@@ -169,6 +169,7 @@ qqark/
 tests/               回归测试（5 个）
 scripts/             仓库自检脚本（CI 也跑同一套）
 dsh-plugin-qqark/    DeepSeek Harness 插件的源码与文档
+market/              DSH 插件市场索引（format 1），把插件挂进「发现」页
 docs/screenshots/    界面截图
 ```
 
@@ -194,6 +195,35 @@ python scripts/check_no_personal_paths.py
 ## 插件部分
 
 见 [`dsh-plugin-qqark/README-zh.md`](dsh-plugin-qqark/README-zh.md)（另有 [English](dsh-plugin-qqark/README.md) / [Español](dsh-plugin-qqark/README-es.md) / [Português](dsh-plugin-qqark/README-pt.md) / [हिन्दी](dsh-plugin-qqark/README-hi.md)）。一句话：它把归档器包成一个侧边栏面板，并注册 `qqark_status`、`qqark_groups`、`qqark_files`、`qqark_tasks` 四个只读工具，让 agent 能在对话里直接回答「上周那个群传了什么」「下载队列卡了没」。
+
+## 插件市场
+
+仓库里的 `market/` 是一份符合 DSH 插件市场索引 format 1 的 JSON，把插件挂进 Harness 的「发现」页，省掉手动 `pnpm pack` + `dsh plugin add`。
+
+1. DSH → **插件** → **实验性插件** → 更多 → **自定义插件市场**，打开开关
+2. 插件页出现「发现」标签 → **添加索引源**，粘贴：
+
+   ```
+   https://cdn.jsdelivr.net/gh/InsMyHe/dsh-qqark@main/market/index.json
+   ```
+
+3. 在列表里点「QQArk 归档器插件」安装即可。
+
+为什么走 jsDelivr 而不是 `raw.githubusercontent.com`：DSH 抓索引只给 15 秒，`raw` 在本机实测多次 `502` / `SSLEOFError`，jsDelivr 稳定且支持 `@main` 与 `@<commit>` 两种 ref，也支持子目录。
+
+索引里的安装源是**钉死在 commit 上的 git spec**：
+
+```
+git+https://github.com/InsMyHe/dsh-qqark.git#<commit>&path:/dsh-plugin-qqark
+```
+
+改了插件版本就要同步更新 `market/index.json` 里的 `versions[]`（`version` / `publishTimestamp` / `source.commit` 三处一起改），否则别人装到的是旧代码。发布前用仓库自带脚本按 format 1 规则过一遍：
+
+```sh
+node scripts/check-market-index.mjs
+```
+
+它会逐条对齐官方 `@deepseek-ai/dsh-plugin-market-index` 的校验规则，检查 commit 是否 40 位小写十六进制、图标能否解析、category/label 是否已声明等。
 
 ## 已知边界
 

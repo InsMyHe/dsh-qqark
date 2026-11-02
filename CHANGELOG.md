@@ -2,6 +2,14 @@
 
 本项目两部分（归档器 + DSH 插件）共用一个版本叙事。日期为发布日。
 
+## 未发布
+
+仓库侧。
+
+- **新增 `market/`：DSH 插件市场索引（format 1）。** 把插件挂进 Harness 的「发现」页，不必手动 `pnpm pack` + `dsh plugin add`。索引里的安装源是钉死在 commit 上的 git spec（`git+https://github.com/InsMyHe/dsh-qqark.git#<commit>&path:/dsh-plugin-qqark`）。
+- **插件 `package.json` 补 `engines.dsh`**：`>=0.2.1-0 <0.3.0`，与市场索引里的 `engines.dsh` 保持一致。
+- **新增 `scripts/check-market-index.mjs`**：逐条对齐官方 `@deepseek-ai/dsh-plugin-market-index` 的 format 1 规则（commit 必须 40 位小写十六进制、图标解析、category/label 必须已声明），CI 里同步执行。
+
 ## 0.5.2
 
 插件侧。
