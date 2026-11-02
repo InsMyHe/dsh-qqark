@@ -250,3 +250,5 @@ node scripts/check-market-index.mjs
 ## 许可
 
 [MIT](LICENSE)。使用前请自行确认符合 QQ 相关服务条款与所在地区的法律法规；本项目只做本地归档，不修改、不上传任何数据。
+
+[![CI](https://github.com/InsMyHe/dsh-qqark/actions/workflows/ci.yml/badge.svg)](https://github.com/InsMyHe/dsh-qqark/actions/workflows/ci.yml)
