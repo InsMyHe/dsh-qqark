@@ -72,7 +72,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/InsMyHe/dsh-qqark",
-            "commit": "a5861680cd142d12d4748311220d6f6abb6ec2e2",
+            "commit": "b8aab49f441eae2d9b30b94d52529fc5bbe8a652",
             "path": "dsh-plugin-qqark"
           },
           "engines": {
